@@ -3,6 +3,7 @@ package BB2.formacion.controllers;
 import BB2.formacion.models.Product;
 import BB2.formacion.models.State;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
@@ -23,10 +24,10 @@ public class ProductControllerTest extends ControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
         String content = mvcResult.getResponse().getContentAsString();
         Product[] products = mapFromJson(content, Product[].class);
-        assertThat(products.length > 0);
+        assertThat(products.length > 0).isTrue();
     }
 
     @Test
@@ -39,7 +40,7 @@ public class ProductControllerTest extends ControllerTest {
                 .param("sortOrder", "1"))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -48,7 +49,7 @@ public class ProductControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -62,7 +63,7 @@ public class ProductControllerTest extends ControllerTest {
                 .content(inputJson))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -76,7 +77,7 @@ public class ProductControllerTest extends ControllerTest {
                 .content(inputJson))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -86,7 +87,7 @@ public class ProductControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(204).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
 }

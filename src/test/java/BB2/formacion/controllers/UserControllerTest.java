@@ -3,6 +3,7 @@ package BB2.formacion.controllers;
 import BB2.formacion.models.Role;
 import BB2.formacion.models.User;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
@@ -21,10 +22,10 @@ public class UserControllerTest extends ControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
         String content = mvcResult.getResponse().getContentAsString();
         User[] users = mapFromJson(content, User[].class);
-        assertThat(users.length > 0);
+        assertThat(users.length > 0).isTrue();
     }
 
     @Test
@@ -38,7 +39,7 @@ public class UserControllerTest extends ControllerTest {
                 .param("sortOrder", "1"))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -48,7 +49,7 @@ public class UserControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -62,7 +63,7 @@ public class UserControllerTest extends ControllerTest {
                 .content(inputJson))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -77,7 +78,7 @@ public class UserControllerTest extends ControllerTest {
                 .content(inputJson))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -87,6 +88,6 @@ public class UserControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(204).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

@@ -2,6 +2,7 @@ package BB2.formacion.controllers;
 
 import BB2.formacion.models.Supplier;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -16,10 +17,10 @@ public class SupplierControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
         String content = mvcResult.getResponse().getContentAsString();
         Supplier[] suppliers = mapFromJson(content, Supplier[].class);
-        assertThat(suppliers.length > 0);
+        assertThat(suppliers.length > 0).isTrue();
     }
 
     @Test
@@ -28,7 +29,7 @@ public class SupplierControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -37,7 +38,7 @@ public class SupplierControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -46,6 +47,6 @@ public class SupplierControllerTest extends ControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri))
                 .andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertThat(200).isEqualTo(status);
+        assertThat(status).isEqualTo(HttpStatus.OK.value());
     }
 }
