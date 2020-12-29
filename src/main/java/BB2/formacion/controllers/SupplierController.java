@@ -22,7 +22,7 @@ public class SupplierController {
 	@Autowired
 	private ProductService productService;
 
-	@GetMapping("suppliers")
+	@GetMapping("suppliers/all")
 	public List<Supplier> getAllSuppliers() {
 		return supplierService.findAllSuppliers();
 	}
@@ -32,6 +32,7 @@ public class SupplierController {
 		Optional<Supplier> optional = supplierService.findSupplierById(id);
 		return optional.isPresent() ? optional.get() : null;
 	}
+
 	@GetMapping("products/{id}/available_suppliers")
 	public List getAvailableSuppliers(@PathVariable Long id) {
 		Optional<Product> optional = productService.findProductById(id);

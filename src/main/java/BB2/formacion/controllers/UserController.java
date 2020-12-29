@@ -30,13 +30,13 @@ public class UserController {
 
     @GetMapping("users/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<User> findAllUsers() {
-        return userService.findAll();
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping("users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Page<User> findUsers(@RequestParam Integer page, @RequestParam Integer size, @RequestParam String sortField, @RequestParam Integer sortOrder) {
+    public Page<User> getUsers(@RequestParam Integer page, @RequestParam Integer size, @RequestParam String sortField, @RequestParam Integer sortOrder) {
         Pageable pageable;
         if (sortField.isEmpty()) {
             pageable = PageRequest.of(page, size);
@@ -47,13 +47,13 @@ public class UserController {
                 pageable = PageRequest.of(page, size, Sort.by(sortField).descending());
             }
         }
-        Page<User> users = userService.findUsers(pageable);
+        Page<User> users = userService.getUsers(pageable);
         return users;
     }
 
     @GetMapping("users/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> findUserById(@PathVariable Long id) {
         Optional<User> optional = userService.findUserById(id);
         User user = optional.isPresent() ? optional.get() : null;
         return new ResponseEntity(user, HttpStatus.OK);

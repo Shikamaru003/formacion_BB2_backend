@@ -15,11 +15,11 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public List<User> findAll() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Page<User> findUsers(Pageable pageable){
+    public Page<User> getUsers(Pageable pageable){
         return userRepository.findAll(pageable);
     }
 
