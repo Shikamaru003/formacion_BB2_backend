@@ -12,7 +12,7 @@
     <artifactId>formacion_BB2_backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Formacion_BB2_backend</name>
-    <description>Demo project for Formacion BB2</description>
+    <description>Demo project for Formacion bb2</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -39,6 +39,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.3.9</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
