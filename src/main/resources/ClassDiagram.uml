@@ -1,0 +1,66 @@
+ @startuml
+
+  class Product {
+      - id : Long
+      - itemCode: int
+      - description: String
+      - price: BigDecimal
+      - state: State
+      - deactivateReason: String
+      - deactivateUser: String
+      - suppliers = Set<Supplier>
+      - priceReductions: Set<PriceReduction>
+      - creationDate: Date
+      - creator: String
+  }
+
+  class User {
+      - id : Long
+      - username: String
+      - passWord: String
+      - role: Role
+  }
+
+  class Supplier {
+      - id : Long
+      - name: String
+      - country: String
+      - products: Set<Product>
+  }
+
+  class PriceReduction {
+      - id: Long
+      - reducedPrice: String
+      - startDate: Date
+      - endDate: Date
+  }
+
+  class ProductPriceReduction {
+      - product_id: Long
+      - price_reduction_id: Long
+  }
+
+  class ProductSupplier {
+      - product_id: Long
+      - supplier_id: Long
+  }
+
+  enum Role {
+        ROLE_ADMIN
+        ROLE_USER
+  }
+
+  enum State {
+       DISCONTINUED
+       ACTIVE
+  }
+
+
+  PriceReduction::id *-- ProductPriceReduction::price_reduction_id
+  Product::id *-- ProductPriceReduction::product_id
+  Supplier::id *-- ProductSupplier::supplier_id
+  Product::id *-- ProductSupplier::product_id
+  Product::state *-- State
+  User::role *-- Role
+
+@endtuml

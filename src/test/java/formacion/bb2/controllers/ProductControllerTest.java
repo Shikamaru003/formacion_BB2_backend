@@ -1,8 +1,6 @@
 package formacion.bb2.controllers;
 
-import formacion.bb2.dtos.PriceReductionDto;
 import formacion.bb2.dtos.ProductDto;
-import formacion.bb2.dtos.SupplierDto;
 import formacion.bb2.models.State;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -57,8 +55,8 @@ public class ProductControllerTest extends ControllerTest {
     @Test
     public void newProduct() throws Exception {
         String uri = "/api/products";
-        ProductDto product = new ProductDto(null, 4563, "description", new BigDecimal("30.00"), State.ACTIVE, null, null, new HashSet<SupplierDto>(),
-                new HashSet<PriceReductionDto>(), new Date(), "admin");
+        ProductDto product = new ProductDto(null, 4563, "description", new BigDecimal("30.00"), State.ACTIVE, null, null, new HashSet<>(),
+                new HashSet<>(), new Date(), "admin");
         String inputJson = mapToJson(product);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
