@@ -8,8 +8,6 @@
       - state: State
       - deactivateReason: String
       - deactivateUser: String
-      - suppliers = Set<Supplier>
-      - priceReductions: Set<PriceReduction>
       - creationDate: Date
       - creator: String
   }
@@ -25,7 +23,6 @@
       - id : Long
       - name: String
       - country: String
-      - products: Set<Product>
   }
 
   class PriceReduction {
@@ -33,16 +30,6 @@
       - reducedPrice: String
       - startDate: Date
       - endDate: Date
-  }
-
-  class ProductPriceReduction {
-      - product_id: Long
-      - price_reduction_id: Long
-  }
-
-  class ProductSupplier {
-      - product_id: Long
-      - supplier_id: Long
   }
 
   enum Role {
@@ -55,11 +42,8 @@
        ACTIVE
   }
 
-
-  PriceReduction::id *-- ProductPriceReduction::price_reduction_id
-  Product::id *-- ProductPriceReduction::product_id
-  Supplier::id *-- ProductSupplier::supplier_id
-  Product::id *-- ProductSupplier::product_id
+  Product "0..*" -- "0..*" PriceReduction
+  Product "0..*" -- "0..*" Supplier
   Product::state *-- State
   User::role *-- Role
 
