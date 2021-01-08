@@ -1,16 +1,15 @@
 package formacion.bb2.controllers;
 
+import formacion.bb2.dtos.PriceReductionDto;
 import formacion.bb2.models.PriceReduction;
-import formacion.bb2.models.Product;
 import formacion.bb2.services.PriceReductionService;
-import formacion.bb2.services.ProductService;
+import formacion.bb2.utils.DTOModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -20,37 +19,20 @@ public class PriceReductionController {
     @Autowired
     private PriceReductionService priceReductionService;
 
-    @Autowired
-    private ProductService productService;
-
     @GetMapping("price_reductions")
-    public List<PriceReduction> getAllSuppliers() {
-        return priceReductionService.findAllPriceReductions();
-    }
-
-    @GetMapping("price_reductions/{id}")
-    public PriceReduction getPriceReductionById(@PathVariable Long id) {
-        Optional<PriceReduction> optional = priceReductionService.findPriceReductionById(id);
-        return optional.orElse(null);
+    public List<PriceReductionDto> getAllSuppliers() {
+        return DTOModelMapper.mapList(priceReductionService.findAllPriceReductions(), PriceReductionDto.class);
     }
 
     @GetMapping("products/{id}/available_price_reductions")
-    public List<PriceReduction> getAvailableSuppliers(@PathVariable Long id) {
-        Optional<Product> optional = productService.findProductById(id);
-        if (optional.isPresent()) {
-            List<Long> priceReductions = new ArrayList<>();
-            for (PriceReduction priceReduction : optional.get().getPriceReductions()) {
-                priceReductions.add(priceReduction.getId());
-            }
-            if (!priceReductions.isEmpty()) {
-                return priceReductionService.findAvailablePriceReductions(priceReductions);
-            } else {
-                return priceReductionService.findAllPriceReductions();
-            }
-        }
-
-        return Collections.emptyList();
+    public List<PriceReductionDto> getAvailablePriceReductions(@PathVariable Long id) {
+        return DTOModelMapper.mapList(priceReductionService.findAvailablePriceReductionsByProductId(id), PriceReductionDto.class);
     }
 
+    @GetMapping("price_reductions/{id}")
+    public ResponseEntity<PriceReductionDto> getPriceReductionById(@PathVariable Long id) {
+        PriceReduction priceReduction = priceReductionService.findPriceReductionById(id);
+        return new ResponseEntity<>(DTOModelMapper.map(priceReduction, PriceReductionDto.class), HttpStatus.OK);
+    }
 
 }

@@ -36,12 +36,15 @@ public class SupplierController {
 
     @GetMapping("products/{id}/available_suppliers")
     public List<Supplier> getAvailableSuppliers(@PathVariable Long id) {
-        Optional<Product> optional = productService.findProductById(id);
-        if (optional.isPresent()) {
+        Product product = productService.findProductById(id);
+
+        if (product != null) {
             List<Long> suppliers = new ArrayList<>();
-            for (Supplier supplier : optional.get().getSuppliers()) {
+
+            for (Supplier supplier : product.getSuppliers()) {
                 suppliers.add(supplier.getId());
             }
+
             if (!suppliers.isEmpty()) {
                 return supplierService.findAvailableSuppliers(suppliers);
             } else {

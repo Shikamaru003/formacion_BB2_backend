@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -31,6 +29,7 @@ public class ProductController {
     @GetMapping("products")
     public Page<ProductDto> getProducts(@RequestParam Integer page, @RequestParam Integer size, @RequestParam String sortField, @RequestParam Integer sortOrder) {
         Pageable pageable;
+
         if (sortField.isEmpty()) {
             pageable = PageRequest.of(page, size);
         } else {
@@ -48,14 +47,7 @@ public class ProductController {
 
     @GetMapping("products/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
-        Optional<Product> optional = productService.findProductById(id);
-        Product product = optional.orElse(null);
-
-        if (product != null) {
-            product.getPriceReductions().removeIf(priceReduction -> priceReduction.getEndDate().before(new Date()));
-            product = productService.saveProduct(product);
-        }
-
+        Product product = productService.findProductById(id);
         return new ResponseEntity<>(DTOModelMapper.map(product, ProductDto.class), HttpStatus.OK);
     }
 
@@ -74,7 +66,7 @@ public class ProductController {
     }
 
     @DeleteMapping("products/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProductById(id);
         return ResponseEntity.noContent().build();

@@ -23,12 +23,14 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
+    public User findUserById(Long id) {
+        Optional<User> optional = userRepository.findById(id);
+        return optional.orElse(null);
     }
 
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findUserByUsername(String username) {
+        Optional<User> optional = userRepository.findByUsername(username);
+        return optional.orElse(null);
     }
 
     public User saveUser(User user) {

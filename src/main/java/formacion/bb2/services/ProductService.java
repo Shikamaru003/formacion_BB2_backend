@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +26,16 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
-    public Optional<Product> findProductById(Long id) {
-        return productRepository.findById(id);
+    public Product findProductById(Long id) {
+        Optional<Product> optional = productRepository.findById(id);
+        Product product = optional.orElse(null);
+
+        if (product != null) {
+            product.getPriceReductions().removeIf(priceReduction -> priceReduction.getEndDate().before(new Date()));
+            product = saveProduct(product);
+        }
+
+        return product;
     }
 
     public Product saveProduct(Product product) {
@@ -50,6 +59,5 @@ public class ProductService {
     public List<Product> findCheapestProductPerSupplier() {
         return productRepository.findCheapestProductPerSupplier();
     }
-
 
 }

@@ -2,19 +2,17 @@ package formacion.bb2.controllers;
 
 import formacion.bb2.dtos.UserDto;
 import formacion.bb2.models.User;
-import formacion.bb2.security.jwt.response.MessageResponse;
 import formacion.bb2.services.UserService;
 import formacion.bb2.utils.DTOModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -28,15 +26,16 @@ public class UserController {
     private PasswordEncoder encoder;
 
     @GetMapping("users/all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Secured("ROLE_ADMIN")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Secured("ROLE_ADMIN")
     public Page<UserDto> getUsers(@RequestParam Integer page, @RequestParam Integer size, @RequestParam String sortField, @RequestParam Integer sortOrder) {
         Pageable pageable;
+
         if (sortField.isEmpty()) {
             pageable = PageRequest.of(page, size);
         } else {
@@ -53,37 +52,36 @@ public class UserController {
     }
 
     @GetMapping("users/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<User> findUserById(@PathVariable Long id) {
-        Optional<User> optional = userService.findUserById(id);
-        User user = optional.orElse(null);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<UserDto> findUserById(@PathVariable Long id) {
+        User user = userService.findUserById(id);
+        return new ResponseEntity<>(DTOModelMapper.map(user, UserDto.class), HttpStatus.OK);
     }
 
     @PostMapping("users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<MessageResponse> newUser(@RequestBody UserDto userDto) {
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<String> newUser(@RequestBody UserDto userDto) {
         User user = DTOModelMapper.map(userDto, User.class);
 
         if (Boolean.TRUE.equals(userService.existsByUsername(user.getUsername()))) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body("Error: Username is already taken!");
         }
 
         user.setPassword(encoder.encode(user.getPassword()));
         userService.saveUser(user);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok("User registered successfully!");
     }
 
     @PutMapping("users/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         User user = DTOModelMapper.map(userDto, User.class);
         User updatedUser = userService.updateUser(user);
-        return new ResponseEntity<>(DTOModelMapper.map(updatedUser,UserDto.class), HttpStatus.OK);
+        return new ResponseEntity<>(DTOModelMapper.map(updatedUser, UserDto.class), HttpStatus.OK);
     }
 
     @DeleteMapping("users/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
